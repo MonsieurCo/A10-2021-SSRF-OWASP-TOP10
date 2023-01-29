@@ -1,0 +1,20 @@
+version: '3'
+services:
+  php-server-1:
+    image: php:7.4-apache
+    ports:
+      - "8080:80"
+    volumes:
+      - ./exposed_serv:/var/www/html/
+    networks:
+      - my-network
+  php-server-2:
+    image: php:7.4-apache
+    volumes:
+      - ./secret_serv:/var/www/html/
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    internal: true

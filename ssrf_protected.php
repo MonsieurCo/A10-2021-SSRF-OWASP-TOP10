@@ -1,11 +1,21 @@
 <?php
+header("Access-Control-Allow-Origin: 'self'");
 
+function disable_url_input($str) {
+    return filter_var($str, FILTER_VALIDATE_URL);
+}
+
+// $allowed_hosts = array("localhost", "host.com");
 // This is a simple SSRF script that will return the contents of the URL
 // passed to it. It is intended to be used as a test for the SSRF
 // vulnerability in the "SSRF" challenge.
 // show file content
 if (isset($_GET['file'])) {
-    echo file_get_contents($_GET['file']);
+    if (disable_url_input($_GET['file'])) {
+        echo "URL not allowed";
+    } else {
+        echo file_get_contents($_GET['file']);
+    }
 }
 
 // ssrf request ifconfig.pro
@@ -26,6 +36,8 @@ if (isset($_GET['url'])) {
     curl_close($ch);
     echo $output;
 }
+
+
 
 
 // ssrf request with fopen

@@ -1,6 +1,6 @@
 version: '3'
 services:
-  php-server-1:
+  vulnerable-server:
     image: php:7.4-apache
     ports:
       - "8080:80"
@@ -8,7 +8,7 @@ services:
       - ./exposed_serv:/var/www/html/
     networks:
       - my-network
-  php-server-2:
+  secret_server:
     image: php:7.4-apache
     volumes:
       - ./secret_serv:/var/www/html/
@@ -17,4 +17,4 @@ services:
 
 networks:
   my-network:
-    internal: true
+  

@@ -1,0 +1,1 @@
+server allow to access this ressource.

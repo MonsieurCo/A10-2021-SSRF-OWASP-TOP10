@@ -20,6 +20,15 @@ if (isset($_GET['file'])) {
 
 // ssrf request ifconfig.pro
 if (isset($_GET['url'])) {
+    $url = $_GET['url'];
+    // make sure the url is only from localhost 
+    if (strpos($url, 'localhost') !== false) {
+        $url = "http://" . $url;
+    } else {
+        echo "Not allowed";
+        exit();
+    }
+    // ssrf request with curl
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -33,9 +42,20 @@ if (isset($_GET['url'])) {
 
 // ssrf request with fopen
 if (isset($_GET['fopen'])) {
-    $file = fopen($_GET['fopen'], "r");
-    echo fread($file, filesize($_GET['fopen']));
-    fclose($file);
+    // sanitize the uri only to a ressource directory
+
+    if (strpos($_GET['fopen'], 'ressource') !== false and strpos($_GET['fopen'], '/..') == false and strpos($_GET['fopen'], '/.') == false) {
+        $file = fopen($_GET['fopen'], "r");
+        if (strpos($_GET['fopen'], '.jpg') !== false or strpos($_GET['fopen'], '.png') !== false) {
+            echo '<img src="', $_GET['fopen'], '" alt="', '" />';
+        } else {
+            echo fread($file, filesize($_GET['fopen']));
+        }
+        fclose($file);
+    } else {
+        echo "Not allowed";
+        exit();
+    }
 }
 
 // ssrf request with post

@@ -29,16 +29,16 @@ if (isset($_GET['curl'])) {
     // make sure the url is only from localhost
     if (strpos($url, 'localhost') !== false) {
         $url = "http://" . $url;
+        // ssrf request with curl
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $output = curl_exec($ch);
+        curl_close($ch);
+        echo $output;
     } else {
         echo "Not allowed";
     }
-    // ssrf request with curl
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    $output = curl_exec($ch);
-    curl_close($ch);
-    echo $output;
 }
 
 
